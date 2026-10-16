@@ -1,381 +1,553 @@
+/* ============================================================
+   A Little Universe for Shifa ♡  —  script.js
+   Photos:  photos/Image1.jpeg ... Image12.jpeg
+   Song:    song.mp3 (root)
+   ============================================================ */
 
-https://ahad092008.github.io/Anniversary/
-ab isme jo images ka h aur song ka wo upload kr ke bhjun tb bhi hoga na usme rhega na
+const PHOTOS = Array.from({ length: 12 }, (_, i) => `photos/Image${i + 1}.jpeg`);
+const DEFAULT_SONG = "song.mp3";
 
-Diagnosing why shared media won't appear for another viewer.
-Nahi, abhi wale version mein ye nahi rahega. Tum apne phone ya Mac par photos aur song add karke link bhejoge, to Shifa ko sab khaali dikhega.
-
-Wajah ye hai ki upload ki hui photos aur song us browser ke andar save hote hain jisme tumne unhe daala. GitHub par kuch upload nahi hota, aur Shifa ka browser alag hai, isliye uske paas wo data pahunchta hi nahi.
-
-Fix ye hai ki photos aur song ko GitHub repo mein files ki tarah rakho, aur code unhe wahin se load kare. Tab link kholte hi sab pehle se laga milega. Folder aisa hoga:
-
-Anniversary/
-├── index.html
-├── style.css
-├── script.js
-├── song.mp3
-└── photos/
-    ├── 1.jpg
-    ├── 2.jpg
-    └── ... 12.jpg
-Diary mein 12 pages par photo frame hai, isliye 1.jpg se 12.jpg tak photos chahiye. Wo pages ke order mein lagengi. Kam photos hongi to baaki frames khaali rahenge.
-Photos bade ho to pehle 800–1000px tak chhoti kar lena (phone ka “resize” ya koi bhi image compressor chalega), warna page ka load slow hoga.
-Song song.mp3 naam se hona chahiye. Ek chhoti MP3 (3–5 MB) rakhna, taaki phone par jaldi load ho.
-Ye sab GitHub par push karne ke baad Pages ko 1–2 minute lagte hain update hone mein.
-Wahi “Add our photos” aur “Choose song” buttons bache rahenge, par ab wo sirf tumhare testing ke kaam aayenge. Shifa ke liye default repo wali files hi dikhengi.
-Dhyan rakhna ki ye tumhari personal photos aur song public GitHub repo mein jaayenge, aur link jisse bhi mile wo dekh sakta hai. Agar ye theek nahi lagta to repo ko private rakh ke Netlify jaise tool se host karna better hoga.
-
-Bolo to main updated script.js bana deta hoon jo ye files apne aap load kare.
-
-Screenshot 2026-10-17 at 1.01.27 AM.png
-yh sb kre h upload
-
-Ran a command, shared files
-Screenshot mein tumhari saari files sahi jagah par hain: photos/Image1.jpeg se Image12.jpeg, song.mp3, index.html aur script.js. Maine tumhare file names ke hisaab se index.html aur script.js update kar diye hain. style.css same rahegi.
-
-Kya badla
-
-Photos ab seedha photos/Image1.jpeg ... Image12.jpeg se load hoti hain. 12 photo-wale pages mein ye usi order mein lagengi (page 1, 2, 3, 4, 5, 7, 8, 11, 12, 14, 15, 17). Shifa ko kuch add nahi karna padega.
-Song song.mp3 se chalta hai. Phones autoplay block karte hain, isliye jaise hi wo pehli baar page palte ya swipe kare, song apne aap shuru ho jaayega. “Play our song” button se wo pause ya play kar sakti hai.
-“Add our photos” aur song choose karne wale buttons hata diye, kyunki ab unki zaroorat nahi. Isse code bhi halka ho gaya.
-Upload kaise karna hai
-
-Repo mein purane index.html aur script.js ko in naye files se replace karo (Add file → Upload files, ya file kholke edit).
-style.css pehle se wahan honi chahiye. Agar upload nahi hui to usse bhi daal do, warna design nahi dikhega.
-1–2 minute baad https://ahad092008.github.io/Anniversary/ kholo aur Cmd+Shift+R (hard refresh) karo, warna purana version cache se dikh sakta hai.
-Dhyan rakhna
-
-File names ka case exactly same hona chahiye. Image1.jpeg kaam karega, image1.jpeg ya Image1.jpg nahi. Tumhare screenshot mein sab sahi dikh raha hai.
-Agar koi photo nahi dikhi to us frame mein “our memory” ka placeholder rahega. Is baat se pata chal jaayega ki kaun si file ka naam ya format galat hai.
-Phone wali photos 3–5 MB ki hoti hain. 12 photos ek saath load hongi to Shifa ke phone par page slow ho sakta hai. Zyada bhaari hon to unhe 1000px tak chhota karke dobara upload kar dena.
-Link bhejne se pehle apne phone par ek baar khol ke check kar lena: photos, song aur page flip teeno.
-
-
-Index
-Code·HTML 
-
-Script
-JS 
-
-You are out of free messages until 4:20 AM
-
-
-Claude is AI and can make mistakes.
-Script · JS
-"use strict";
- 
-/* ================= Content ================= */
-const pages = [
-  { label: "our first little page", title: "Our Little Forever", doodle: "🎀", sticker: "🧸", photo: true,
-    text: "Shifa, welcome to our tiny corner of the world. ♡ I made this because sometimes a message feels too small for everything I want to say. So I gave my feelings a little book, pink pages, and a few too many bows. Imagine me beside you, smiling like an idiot and getting shy halfway through saying something sweet.",
-    note: "start here, my favourite girl ✧", caption: "the beginning of our little forever ♡" },
-  { label: "anniversary keepsake", title: "17 October — Our Day", doodle: "🗓️", sticker: "💌", photo: true,
-    text: "17 October. Just a date to everyone else, but ours to keep close. 💗 It lets me pause and think about our conversations, silly moments, patience, missing-you moments, and all the little ways you became important to me. Happy anniversary, Shifa. May this date keep giving us reasons to smile, year after year.",
-    note: "one date, so many feelings", caption: "somehow, you became my favourite person" },
-  { label: "my girl", title: "The Girl I Adore 🎀", doodle: "🌷", sticker: "🎀", photo: true,
-    text: "There is something about you that makes you you. You can be cute, stubborn, funny, soft, dramatic… sometimes all in one conversation. 😭 I adore the person behind all those little moods, not just the easy days. You never have to perform some perfect version of yourself for me. My favourite is the real Shifa.",
-    note: "no edits needed, you are you", caption: "one date, a thousand soft feelings" },
-  { label: "little everyday love", title: "My Favourite Human", doodle: "☁️", sticker: "🐻", photo: true,
-    text: "If something funny happens, you are one of the first people I want to tell. If my day feels long, talking to you can make it lighter. And when nothing special happens, I still like having you there. I love this kind of closeness: sharing ordinary bits of life with my favourite human.",
-    note: "you make the ordinary feel ours", caption: "our jokes deserve their own little corner" },
-  { label: "details worth keeping", title: "Little Things I Love About You", doodle: "✿", sticker: "🌸", photo: true,
-    text: "I love your way of talking, the moments you make me laugh without trying, the softness you show in your own way, and tiny habits that probably seem normal to you. ♡ I want to keep noticing the small details—not because they are grand, but because they belong to you.",
-    note: "the tiny things are never tiny to me", caption: "the day the distance felt smaller" },
-  { label: "our inside joke", title: "Pagal–Shukriya Club", doodle: "🤡", sticker: "💗", photo: false,
-    text: "You: “Pagal.” Me: “Shukriya.” 😭🤝 How did this become our thing? You call me pagal and I thank you like you have handed me an award. If you call me pagal ten years from now, I will probably still say shukriya. Some traditions are too important to retire.",
-    note: "officially certified: your pagal", caption: "tiny details, big feelings" },
-  { label: "the day we met", title: "The Day I Saw You", doodle: "✨", sticker: "🦋", photo: true,
-    text: "Meeting you in real life is a memory I can replay and still feel something. You were no longer just a name on my screen—you were actually there, in the same place as me. For a little while, the distance was not a map or a countdown. It was gone, and I got to be near you.",
-    note: "a real-life memory I hold close", caption: "a little reminder of what I adore" },
-  { label: "memory no. 01", title: "My Most Precious Memory", doodle: "🫶", sticker: "📸", photo: true,
-    text: "Of all the things I could keep in a box, I would keep that meeting somewhere safe. Not because every second had to be perfect, but because it was ours. I hope this is only the first of many memories: more days together, more photographs, and more stories that start with “remember when…?”",
-    note: "one meeting, a place in my heart forever", caption: "a memory I would happily relive" },
-  { label: "our little route", title: "Lucknow ♡ Gorakhpur", doodle: "🗺️", sticker: "💌", photo: false, map: true,
-    text: "Two cities, one stubborn little connection. 🗺️ The map can show roads and miles, but not the way someone can feel close while far away. Some days I wish the journey were shorter; most days I look forward to the next time it brings us closer. Until then, here is our dotted route—one day at a time.",
-    note: "distance is real; so is our closeness", caption: "a pocketful of our silly moments" },
-  { label: "letters for later", title: "Little Letters for You 💌", doodle: "💌", sticker: "✉️", photo: false,
-    text: "For a tired day: please rest; you do not have to solve everything at once. For a day you doubt yourself: you are more than one bad moment. For a day you miss me: picture a tight hug that lasts a few seconds longer than expected. And for an ordinary day: hi, Shifa. I am glad you are in my life. That is all. That is a lot.",
-    note: "open whichever letter your heart needs", caption: "things I hope you never forget" },
-  { label: "your smile goes here", title: "Your Smile, My Sukoon", doodle: "☀️", sticker: "🌼", photo: true,
-    text: "I do not need you to be cheerful every minute. I love when your smile arrives naturally, when you laugh properly, or when our conversation gets silly. 🤍 There is sukoon in sharing a small happy moment with you. I hope I can give you that feeling too—not by fixing every problem, but by being someone you can breathe around.",
-    note: "may your smile always find room to return", caption: "a hug saved for the days apart" },
-  { label: "nickname collection", title: "The Nicknames Only We Know", doodle: "🌸", sticker: "🎀", photo: true,
-    text: "My Shifa, meri jaan, cutie, little lily, madam ji, and the one-and-only pagal-caller. 🎀 Some names are sweet, some silly, and some would sound ridiculous to anyone outside our world. And because you love lilies, here is a tiny lily—a reminder that I pay attention to the things you love.",
-    note: "reserved for you, nobody else", caption: "every photo has a story only we know" },
-  { label: "hug delivery: in progress", title: "If I Could Be There Right Now", doodle: "🫂", sticker: "☁️", photo: false,
-    text: "I would not plan some huge scene. I would just want to see you, sit close, and hear you talk without a screen between us. Maybe we would get food, tease each other, and spend too long deciding what to do next. When it was time to leave, I would wish the day had a few more hours. 🫂",
-    note: "sending a hug across the miles", caption: "my favourite kind of ordinary" },
-  { label: "exhibit A: us", title: "Our Little Memory Museum", doodle: "🖼️", sticker: "⭐", photo: true,
-    text: "Imagine a tiny museum with a pink door. Inside: favourite photos, screenshots that make no sense without context, jokes we keep repeating, conversations we wish we could save, and that precious day we met. 📸 The exhibits are precious because we know what they mean. Add your pictures and let this museum grow with us.",
-    note: "admission fee: one smile ♡", caption: "little names, endless affection" },
-  { label: "our someday", title: "A Future With You", doodle: "🕊️", sticker: "🏡", photo: true,
-    text: "When I picture our future, I picture peace more than perfection: a calm home, shared meals, sleepy conversations, small errands together, and laughing about something nobody else understands. 🏡 I want us both to grow and still come back to each other with kindness. Less rushing, more sukoon. Just a steady, warm “I am home” feeling.",
-    note: "a peaceful life, built gently together", caption: "until I can say this beside you" },
-  { label: "from me to you", title: "A Letter From My Heart", doodle: "♡", sticker: "🕯️", photo: false,
-    text: "Shifa, I cannot always find the exact words for what I feel. Sometimes I hide soft things behind jokes; sometimes I miss you and do not know how to make the miles smaller. I am grateful for the memories we have and the ones still ahead. I hope we keep choosing honesty, patience, laughter, and care. You matter to me, more than this little book can fit.",
-    note: "written with a very full heart", caption: "a home made of moments and kindness" },
-  { label: "our anniversary page", title: "Happy Anniversary, Shifa 💗", doodle: "💗", sticker: "💐", photo: true,
-    text: "Happy anniversary, my Shifa. 17 October will always be a sweet reminder of us. 🎀 Thank you for the silly pagal–shukriya moments, the memory of meeting you, and giving me someone to look forward to seeing again. I hope the next chapters bring more time together, more lilies, more laughter, and a little less distance. I am happy it is you, meri favourite person. ♡",
-    note: "with love, your Ahad · always cheering for us", caption: "one more page, still so much love" }
+/* ---------------- Page content (17 pages) ---------------- */
+const PAGES = [
+  {
+    label: "chapter one",
+    title: "Where it all began",
+    text: "Some stories don't start with fireworks — they start with a quiet hello that somehow feels like home. That was you, Shifa. That was us.",
+    caption: "the beginning ♡",
+    note: "— 17 October, our little forever starts here",
+    sticker: "🎀", doodle: "✧",
+    photo: 0
+  },
+  {
+    label: "chapter two",
+    title: "Two cities, one sky",
+    text: "Kilometres between us, but the same moon watches over both of us. Every night I look up and know — you're looking too.",
+    caption: "same sky, same us",
+    note: "distance means nothing when someone means everything",
+    sticker: "🌙", doodle: "✦",
+    photo: 1
+  },
+  {
+    label: "chapter three",
+    title: "Your laugh, my favourite song",
+    text: "If I could bottle one sound and keep it forever, it would be your laugh. Soft, sudden, contagious — my favourite melody.",
+    caption: "🎵 on repeat",
+    note: "you laugh and the whole world softens",
+    sticker: "🎶", doodle: "♪",
+    photo: 2
+  },
+  {
+    label: "chapter four",
+    title: "Little things, big love",
+    text: "Good morning texts. Random memes. The way you say my name. It's the tiny things that build the biggest love.",
+    caption: "the small stuff ♡",
+    note: "little things, endlessly",
+    sticker: "💌", doodle: "✧",
+    photo: 3
+  },
+  {
+    label: "chapter five",
+    title: "You in every colour",
+    text: "Every photo of you is my favourite photo. Every version of you is my favourite version. You make ordinary moments feel like art.",
+    caption: "my favourite view",
+    note: "you, in every frame",
+    sticker: "🌸", doodle: "✦",
+    photo: 4
+  },
+  {
+    label: "chapter six",
+    title: "The way you care",
+    text: "You notice when I'm quiet. You ask twice. You remember the small details. That kind of care — it doesn't go unnoticed, Shifa.",
+    caption: "softest heart ♡",
+    note: "you care like it's breathing",
+    sticker: "🌷", doodle: "✧",
+    photo: 5
+  },
+  {
+    label: "chapter seven",
+    title: "Us, in our own world",
+    text: "No filters, no audience, no pretending. Just us — messy, silly, real. And honestly, that's the most beautiful thing I know.",
+    caption: "just us ♡",
+    note: "our little universe",
+    sticker: "✨", doodle: "✦",
+    photo: 6
+  },
+  {
+    label: "chapter eight",
+    title: "Late night talks",
+    text: "3 a.m. conversations that turn into 5 a.m. ones. Sleepy voices, honest words. Those nights are my favourite kind of magic.",
+    caption: "🌙 3 a.m. diaries",
+    note: "I'd lose sleep for you, always",
+    sticker: "🌌", doodle: "✧",
+    photo: 7
+  },
+  {
+    label: "chapter nine",
+    title: "You make me better",
+    text: "You make me want to be kinder, calmer, softer. Loving you isn't just a feeling — it's a direction I want to keep walking.",
+    caption: "growing with you",
+    note: "you're my favourite teacher",
+    sticker: "🌿", doodle: "✧",
+    photo: 8
+  },
+  {
+    label: "chapter ten",
+    title: "Every version of you",
+    text: "Sleepy you. Silly you. Serious you. Angry you. Every single version — I keep falling for all of them, again and again.",
+    caption: "all of you ♡",
+    note: "every you is my favourite you",
+    sticker: "🫶", doodle: "✦",
+    photo: 9
+  },
+  {
+    label: "chapter eleven",
+    title: "Our promise",
+    text: "Not a perfect promise — a real one. To show up, to listen, to stay. Through the easy days and the heavy ones. Together.",
+    caption: "you & me ♡",
+    note: "always, in all ways",
+    sticker: "💍", doodle: "✧",
+    photo: 10
+  },
+  {
+    label: "chapter twelve",
+    title: "A hundred little forevers",
+    text: "Not one big forever — a hundred little ones. Every morning, every call, every 'goodnight'. That's how I want to love you.",
+    caption: "little forevers",
+    note: "one day at a time, with you",
+    sticker: "🕊️", doodle: "✦",
+    photo: 11
+  },
+  {
+    label: "chapter thirteen",
+    title: "Places I want with you",
+    text: "Coffee shops we haven't found yet. Streets we haven't walked. Sunsets we haven't watched. The map is still blank — let's fill it.",
+    caption: "where to next?",
+    note: "anywhere, as long as it's you",
+    sticker: "🗺️", doodle: "✧",
+    map: true
+  },
+  {
+    label: "chapter fourteen",
+    title: "If I could tell you one thing",
+    text: "It would be this: you are not too much, and you are never not enough. You are exactly the kind of person the world needs more of.",
+    caption: "for your heart ♡",
+    note: "you are enough, always",
+    sticker: "💗", doodle: "✦"
+  },
+  {
+    label: "chapter fifteen",
+    title: "The way you feel like home",
+    text: "I've never needed four walls to feel at home. I just need your voice, your name, your presence. You feel like a place I belong.",
+    caption: "you = home",
+    note: "my safest place is you",
+    sticker: "🏡", doodle: "✧"
+  },
+  {
+    label: "chapter sixteen",
+    title: "Grateful for you",
+    text: "For every laugh, every talk, every silence that felt comfortable. For being you — fully, honestly, beautifully. Thank you, Shifa.",
+    caption: "thank you ♡",
+    note: "grateful, endlessly",
+    sticker: "🌻", doodle: "✦"
+  },
+  {
+    label: "the last page",
+    title: "And this is just the start",
+    text: "This book ends here, but our story doesn't. There are so many pages left — blank, waiting, ours. Let's write them slowly, together.",
+    caption: "to be continued ♡",
+    note: "yours, always — Ahad",
+    sticker: "♡", doodle: "✧"
+  }
 ];
- 
-const MAP_SVG = `<div class="map-wrap"><svg viewBox="0 0 440 190" role="img" aria-label="Route between Lucknow and Gorakhpur"><defs><linearGradient id="land" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#fff7ed"/><stop offset="1" stop-color="#f5e2ed"/></linearGradient></defs><rect width="440" height="190" fill="url(#land)"/><path d="M-10 45C60 15 95 80 145 52S235 22 270 62 360 100 455 48" fill="none" stroke="#d4e8dc" stroke-width="18" opacity=".8"/><path d="M-10 142C55 112 108 160 164 125S270 140 320 104 395 128 455 100" fill="none" stroke="#d4e8dc" stroke-width="12" opacity=".7"/><path d="M95 73Q190 10 300 112" stroke="#cf86a4" stroke-width="3" fill="none" class="route"/><g transform="translate(95 73)"><circle r="19" fill="#fff" stroke="#d88ca9" stroke-width="2"/><text text-anchor="middle" y="6" font-size="20">🌸</text></g><g transform="translate(300 112)"><circle r="19" fill="#fff" stroke="#d88ca9" stroke-width="2"/><text text-anchor="middle" y="6" font-size="20">💗</text></g><g font-family="Arial" font-size="13" font-weight="bold" fill="#9b5f7a"><text x="95" y="45" text-anchor="middle">LUCKNOW</text><text x="300" y="147" text-anchor="middle">GORAKHPUR</text></g><g fill="#d8a7b9"><text x="195" y="58" font-size="19">♡</text><text x="220" y="88" font-size="12">♡</text><text x="170" y="123" font-size="15">✧</text><text x="350" y="55" font-size="18">✿</text></g></svg></div><div class="map-caption">two cities · one little universe ♡</div>`;
- 
-/* ================= Helpers ================= */
-const $ = (id) => document.getElementById(id);
-const rand = (a, b) => a + Math.random() * (b - a);
-const statusEl = $("status");
-const say = (msg) => { statusEl.textContent = msg; };
- 
-/* ================= Book ================= */
-const book = $("book");
-const sheets = [];
-let photoCount = 0;
-let current = 0;
- 
-function coverFace() {
-  const f = document.createElement("div");
-  f.className = "face cover";
-  f.innerHTML = `<div class="cover-top">✿ ✧ ♡ ✧ ✿</div><span class="cover-sticker l">🧸</span><span class="cover-sticker r">🦋</span>
-    <div><div class="cover-small">a little diary for</div><h2 class="cover-title">My Shifa</h2><div class="cover-small">17 pages · one little forever</div><div class="cover-flower">🌸 ♡ 🌷</div></div>
-    <div class="cover-bottom">made slowly, with all my love</div>`;
-  return f;
+
+/* ---------------- DOM ---------------- */
+const book       = document.getElementById("book");
+const bookArea   = document.getElementById("bookArea");
+const prevBtn    = document.getElementById("prev");
+const nextBtn    = document.getElementById("next");
+const counter    = document.getElementById("counter");
+const bar        = document.getElementById("bar");
+const statusEl   = document.getElementById("status");
+
+const musicBtn   = document.getElementById("music");
+const musicCard  = document.getElementById("musicCard");
+const musicClose = document.getElementById("musicClose");
+const songTitle  = document.getElementById("songTitle");
+const songAudio  = document.getElementById("songAudio");
+const songFile   = document.getElementById("songFile");
+const changeSong = document.getElementById("changeSong");
+const clearSong  = document.getElementById("clearSong");
+
+const confettiBtn = document.getElementById("confetti");
+const allPhotos   = document.getElementById("allPhotos");
+
+/* ---------------- Build book pages ---------------- */
+let current = 0;           // 0 = cover, 1..N = pages
+const total = PAGES.length;
+
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, c => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  }[c]));
 }
-function backFace() {
-  const f = document.createElement("div");
-  f.className = "face back";
-  f.textContent = "♡";
-  return f;
-}
-function pageFace(p, n) {
-  const f = document.createElement("div");
-  f.className = "face";
-  f.innerHTML = `<span class="tape"></span><span class="doodle">${p.doodle}</span><span class="sticker">${p.sticker}</span>
-    <div class="inner">
-      <div class="label"></div><h2 class="title"></h2><p class="text"></p>
-      <div class="caption"><span class="cap-text"></span><span>♡ ✧ 🎀</span></div>
-      ${p.map ? MAP_SVG : ""}
-      ${p.photo ? `<div class="polaroid"><span class="pic"><img alt="Our memory" loading="lazy" decoding="async"><span class="ph">♡ our memory ♡</span></span><small>us ♡</small></div>` : ""}
-      <p class="note"></p><span class="pagenum">♡ ${n} / 17 ♡</span>
+
+function photoHTML(idx, customSrc) {
+  const src = customSrc || PHOTOS[idx];
+  if (!src) {
+    return `<div class="polaroid"><div class="pic"><span class="ph">📷 add our photo</span></div><small>us ♡</small></div>`;
+  }
+  return `
+    <div class="polaroid" data-photo="${idx}">
+      <div class="pic">
+        <img src="${esc(src)}" alt="us ♡" loading="lazy" onerror="this.style.display='none';this.parentNode.querySelector('.ph').style.display='block';" />
+        <span class="ph" style="display:none">📷 add our photo</span>
+      </div>
+      <small>us ♡</small>
     </div>`;
-  f.querySelector(".label").textContent = p.label;
-  f.querySelector(".title").textContent = p.title;
-  f.querySelector(".text").textContent = p.text;
-  f.querySelector(".cap-text").textContent = p.caption;
-  f.querySelector(".note").textContent = p.note;
- 
-  if (p.photo) {
-    const img = f.querySelector("img");
-    const ph = f.querySelector(".ph");
-    img.onload = () => { img.style.display = "block"; ph.style.display = "none"; };
-    img.src = `photos/Image${++photoCount}.jpeg`; // case-sensitive on GitHub Pages
-  }
-  return f;
 }
- 
-function addSheet(front, back, z) {
-  const s = document.createElement("div");
-  s.className = "page";
-  s.style.zIndex = z;
-  s.append(front, back);
-  book.appendChild(s);
-  sheets.push(s);
+
+function mapHTML() {
+  return `
+    <div class="map-wrap">
+      <svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#fff5f8"/>
+            <stop offset="1" stop-color="#f5e7f1"/>
+          </linearGradient>
+        </defs>
+        <rect width="400" height="200" fill="url(#g1)"/>
+        <path d="M40 160 Q120 40 200 100 T360 60" stroke="#c2587f" stroke-width="2.5" fill="none" class="route"/>
+        <circle cx="40" cy="160" r="7" fill="#c2587f"/>
+        <circle cx="360" cy="60" r="7" fill="#a24468"/>
+        <text x="40" y="185" font-family="Nunito" font-size="11" fill="#9b6f82" text-anchor="middle">me</text>
+        <text x="360" y="48" font-family="Nunito" font-size="11" fill="#9b6f82" text-anchor="middle">you</text>
+        <text x="200" y="100" font-family="Dancing Script" font-size="16" fill="#c2587f" text-anchor="middle">♡</text>
+      </svg>
+    </div>
+    <p class="map-caption">somewhere between here and you ♡</p>`;
 }
-addSheet(coverFace(), backFace(), pages.length + 1);
-pages.forEach((p, i) => addSheet(pageFace(p, i + 1), backFace(), pages.length - i));
- 
-/* ================= Navigation ================= */
-const total = sheets.length;
-const counter = $("counter"), prev = $("prev"), next = $("next"), bar = $("bar");
- 
-function update() {
-  sheets.forEach((s, i) => {
-    s.classList.toggle("flipped", i < current);
-    s.classList.toggle("is-active", i === current);
-    s.classList.toggle("far", i < current - 1 || i > current + 1); // hide off-stage pages: big speed-up
+
+function buildPages() {
+  PAGES.forEach((p, i) => {
+    const el = document.createElement("div");
+    el.className = "page";
+    el.dataset.index = i + 1;
+
+    const sticker = p.sticker ? `<span class="sticker">${p.sticker}</span>` : "";
+    const doodle  = p.doodle  ? `<span class="doodle">${p.doodle}</span>`   : "";
+
+    const photoBlock = p.photo !== undefined
+      ? photoHTML(p.photo)
+      : (p.map ? mapHTML() : "");
+
+    el.innerHTML = `
+      <div class="face front">
+        <span class="tape"></span>
+        ${doodle}
+        <div class="inner">
+          <span class="label">${esc(p.label)}</span>
+          <h2 class="title">${esc(p.title)}</h2>
+          <p class="text">${esc(p.text)}</p>
+          ${photoBlock}
+          ${p.caption ? `<div class="caption"><span>${esc(p.caption)}</span><span>♡</span></div>` : ""}
+          ${p.note ? `<p class="note">${esc(p.note)}</p>` : ""}
+          <span class="pagenum">— ${i + 1} / ${total} —</span>
+        </div>
+        ${sticker}
+      </div>
+      <div class="face back"><span>♡</span></div>
+    `;
+
+    el.addEventListener("click", () => goTo(i + 1));
+    book.appendChild(el);
   });
-  counter.textContent = current === 0 ? "Cover" : `Page ${current} / 17`;
-  prev.disabled = current === 0;
-  next.disabled = current >= total - 1;
-  bar.style.transform = `scaleX(${current / (total - 1)})`;
+
+  // Cover page
+  const cover = document.createElement("div");
+  cover.className = "page";
+  cover.dataset.index = 0;
+  cover.innerHTML = `
+    <div class="face cover">
+      <span class="cover-sticker l">🌸</span>
+      <span class="cover-sticker r">🎀</span>
+      <div class="cover-top">✦ ❦ ✦</div>
+      <div>
+        <div class="cover-small">A Little Book For</div>
+        <div class="cover-title">Shifa</div>
+        <div class="cover-flower">🌹</div>
+        <div class="cover-small" style="margin-top:14px">from Ahad ♡</div>
+      </div>
+      <div class="cover-bottom">— a little universe, just for you —</div>
+    </div>
+    <div class="face back"><span>♡</span></div>
+  `;
+  cover.addEventListener("click", () => goTo(1));
+  book.insertBefore(cover, book.children[1] || null);
 }
-const go = (d) => {
-  const n = current + d;
-  if (n < 0 || n > total - 1) return;
-  current = n;
-  autoStart();
-  update();
-};
-next.addEventListener("click", () => go(1));
-prev.addEventListener("click", () => go(-1));
- 
-sheets.forEach((s, i) => s.addEventListener("click", (e) => {
-  if (i !== current || e.target.closest("label,input,button")) return;
-  const r = s.getBoundingClientRect();
-  go(e.clientX - r.left < r.width * 0.18 && current > 0 ? -1 : 1);
-}));
-document.addEventListener("keydown", (e) => {
-  if (e.target.closest && e.target.closest("audio,input")) return;
-  if (e.key === "ArrowRight") go(1);
-  if (e.key === "ArrowLeft") go(-1);
-});
-let startX = null;
-const area = $("bookArea");
-area.addEventListener("touchstart", (e) => { startX = e.touches[0].clientX; }, { passive: true });
-area.addEventListener("touchend", (e) => {
-  if (startX === null) return;
-  const dx = e.changedTouches[0].clientX - startX;
-  startX = null;
-  if (Math.abs(dx) > 60) go(dx < 0 ? 1 : -1);
-}, { passive: true });
-update();
- 
-/* ================= Music (song.mp3 from the repo) ================= */
-const musicBtn = $("music");
-const audio = new Audio("song.mp3");
-audio.loop = true;
-audio.preload = "auto";
-let started = false;
- 
-const syncBtn = () => { musicBtn.textContent = audio.paused ? "♫ Play our song" : "♫ Pause our song"; };
-audio.addEventListener("play", () => { syncBtn(); say("Our song is playing — turn the pages, it keeps going ♡"); });
-audio.addEventListener("pause", () => { syncBtn(); say("Song paused ♡"); });
-audio.addEventListener("error", () => say("Could not load song.mp3 — check the file name ♡"));
-musicBtn.addEventListener("click", () => {
-  started = true; // she chose manually, never auto-start after this
-  if (audio.paused) audio.play().catch(() => say("Tap again to play our song ♡"));
-  else audio.pause();
-});
-// Browsers block autoplay, so the song starts on her first tap/swipe/key press
-function autoStart() {
-  if (started) return;
-  started = true;
-  audio.play().catch(() => {});
+
+/* ---------------- Flip logic ---------------- */
+function pages() {
+  return [...book.querySelectorAll(".page")];
 }
- 
-/* ================= Confetti (Web Animations, no layout work) ================= */
-$("confetti").addEventListener("click", () => {
-  const syms = ["♡", "✧", "🌸", "🎀", "💗", "⭐", "🦋", "🌷"];
-  const frag = document.createDocumentFragment();
-  for (let i = 0; i < 22; i++) {
-    const el = document.createElement("span");
-    el.textContent = syms[(Math.random() * syms.length) | 0];
-    el.style.cssText = `position:fixed;z-index:30;left:${rand(5, 95)}vw;top:${rand(35, 80)}vh;font-size:${rand(17, 36)}px;pointer-events:none;will-change:transform,opacity`;
-    frag.appendChild(el);
-    el.animate(
-      [{ transform: "translate(0,0) rotate(0)", opacity: 1 },
-       { transform: `translate(${rand(-80, 80)}px,${rand(-300, -140)}px) rotate(${rand(-180, 180)}deg)`, opacity: 0 }],
-      { duration: 1600, easing: "ease-out", fill: "forwards" }
-    ).onfinish = () => el.remove();
-  }
-  document.body.appendChild(frag);
-  say("A little shower of magic, just for you ✨");
-});
- 
-/* ================= Background particles: ONE canvas instead of ~70 animated DOM nodes ================= */
-(function particles() {
-  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  const cv = $("fx"), ctx = cv.getContext("2d");
-  const dpr = Math.min(window.devicePixelRatio || 1, 2);
-  let W = 0, H = 0;
- 
-  function resize() {
-    W = innerWidth; H = innerHeight;
-    cv.width = W * dpr; cv.height = H * dpr;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  }
-  resize();
-  addEventListener("resize", resize);
- 
-  function glyph(ch, px, color) {
-    const s = Math.ceil(px * 1.6);
-    const c = document.createElement("canvas");
-    c.width = c.height = s * dpr;
-    const g = c.getContext("2d");
-    g.scale(dpr, dpr);
-    g.font = `${px}px serif`;
-    g.textAlign = "center"; g.textBaseline = "middle";
-    g.fillStyle = color;
-    g.fillText(ch, s / 2, s / 2);
-    c.size = s;
-    return c;
-  }
-  function glow() {
-    const s = 16, c = document.createElement("canvas");
-    c.width = c.height = s * dpr;
-    const g = c.getContext("2d");
-    g.scale(dpr, dpr);
-    const grad = g.createRadialGradient(s / 2, s / 2, 0, s / 2, s / 2, s / 2);
-    grad.addColorStop(0, "rgba(255,250,215,1)");
-    grad.addColorStop(.4, "rgba(246,201,222,.55)");
-    grad.addColorStop(1, "rgba(246,201,222,0)");
-    g.fillStyle = grad; g.fillRect(0, 0, s, s);
-    c.size = s;
-    return c;
-  }
- 
-  const k = W < 600 ? 0.6 : 1;
-  const hearts = ["♡", "✧", "✿", "♥", "❀"].map((ch, i) => glyph(ch, 24, ["#d58aa6", "#e7a6bf", "#c7829e", "#dd8fae", "#e6a9c0"][i]));
-  const petals = ["🌸", "🌷"].map((ch) => glyph(ch, 22, "#000"));
-  const fly = glow();
-  const bfly = glyph("🦋", 26, "#000");
-  const ps = [];
- 
-  for (let i = 0; i < 16 * k; i++) ps.push({ t: "up", s: hearts[i % hearts.length], x: rand(0, W), y: rand(0, H), v: rand(-40, -18), amp: rand(10, 28), ph: rand(0, 6.28), sw: rand(.4, 1), sc: rand(.5, 1.1), a: rand(.45, .8), r: rand(-.4, .4) });
-  for (let i = 0; i < 9 * k; i++) ps.push({ t: "down", s: petals[i % 2], x: rand(0, W), y: rand(0, H), v: rand(22, 48), amp: rand(18, 40), ph: rand(0, 6.28), sw: rand(.3, .7), sc: rand(.55, 1), a: rand(.55, .85), r: rand(0, 6) });
-  for (let i = 0; i < 14 * k; i++) ps.push({ t: "fly", s: fly, x: rand(0, W), y: rand(0, H), v: rand(-6, 6), amp: rand(6, 16), ph: rand(0, 6.28), sw: rand(.5, 1.4), sc: rand(.5, 1) });
-  for (let i = 0; i < 3; i++) ps.push({ t: "bf", s: bfly, x: rand(-40, W), y: rand(60, H - 60), y0: 0, v: rand(26, 46), amp: rand(18, 34), ph: rand(0, 6.28), sw: rand(.8, 1.4), sc: rand(.8, 1.1) });
-  ps.forEach((p) => { p.y0 = p.y; p.x0 = p.x; });
- 
-  let last = 0, raf = 0, time = 0;
-  function frame(now) {
-    raf = requestAnimationFrame(frame);
-    const dt = Math.min((now - last) / 1000 || 0, 0.05);
-    last = now; time += dt;
-    ctx.clearRect(0, 0, W, H);
-    for (const p of ps) {
-      let a = 1, rot = 0, x = p.x, y = p.y;
-      if (p.t === "up" || p.t === "down") {
-        p.y += p.v * dt;
-        if (p.y < -40) p.y = H + 40;
-        if (p.y > H + 40) p.y = -40;
-        x = p.x0 + Math.sin(time * p.sw + p.ph) * p.amp;
-        y = p.y;
-        a = p.a * Math.sin(Math.PI * Math.min(1, Math.max(0, (y + 40) / (H + 80))));
-        rot = p.t === "down" ? p.r + time * .4 : p.r + Math.sin(time * p.sw + p.ph) * .3;
-      } else if (p.t === "fly") {
-        x = p.x + Math.sin(time * p.sw + p.ph) * p.amp;
-        y = p.y + Math.cos(time * p.sw * .8 + p.ph) * p.amp;
-        a = 0.15 + 0.85 * (0.5 + 0.5 * Math.sin(time * p.sw * 2 + p.ph));
-      } else {
-        p.x += p.v * dt;
-        if (p.x > W + 40) p.x = -40;
-        x = p.x;
-        y = p.y0 + Math.sin(time * p.sw + p.ph) * p.amp;
-        rot = Math.sin(time * p.sw * 2 + p.ph) * .25;
-        a = .85;
-      }
-      if (a <= 0.01) continue;
-      const w = p.s.size * p.sc;
-      ctx.globalAlpha = a;
-      if (rot) {
-        ctx.save();
-        ctx.translate(x, y);
-        ctx.rotate(rot);
-        ctx.drawImage(p.s, -w / 2, -w / 2, w, w);
-        ctx.restore();
-      } else {
-        ctx.drawImage(p.s, x - w / 2, y - w / 2, w, w);
-      }
+
+function goTo(n, silent) {
+  n = Math.max(0, Math.min(total, n));
+  const all = pages();
+
+  all.forEach((pg, i) => {
+    pg.classList.remove("is-active", "flipped", "far");
+    if (i < n) {
+      pg.classList.add("flipped");
+    } else if (i === n) {
+      pg.classList.add("is-active");
+    } else {
+      pg.classList.add("far");
     }
-    ctx.globalAlpha = 1;
+  });
+
+  current = n;
+
+  const coverShowing = n === 0;
+  prevBtn.disabled = coverShowing;
+  nextBtn.disabled = n >= total;
+
+  counter.textContent = coverShowing ? "Cover" : `Page ${n} of ${total}`;
+  bar.style.transform = `scaleX(${n / total})`;
+
+  if (!silent && statusEl && !statusEl.dataset.locked) {
+    statusEl.textContent = coverShowing
+      ? "Tap the cover to open our little book ♡"
+      : `Page ${n} — tap, swipe, or use the arrows ♡`;
   }
-  const start = () => { if (!raf) { last = performance.now(); raf = requestAnimationFrame(frame); } };
-  const stop = () => { cancelAnimationFrame(raf); raf = 0; };
-  document.addEventListener("visibilitychange", () => (document.hidden ? stop() : start()));
-  start();
-})();
- 
+}
 
+prevBtn.addEventListener("click", () => goTo(current - 1));
+nextBtn.addEventListener("click", () => goTo(current + 1));
 
-Claude finished the response
+/* ---------------- Keyboard ---------------- */
+window.addEventListener("keydown", (e) => {
+  if (e.key === "ArrowRight") goTo(current + 1);
+  if (e.key === "ArrowLeft")  goTo(current - 1);
+});
+
+/* ---------------- Swipe ---------------- */
+let touchX = null, touchY = null;
+bookArea.addEventListener("touchstart", (e) => {
+  if (e.touches.length !== 1) return;
+  touchX = e.touches[0].clientX;
+  touchY = e.touches[0].clientY;
+}, { passive: true });
+
+bookArea.addEventListener("touchend", (e) => {
+  if (touchX === null) return;
+  const dx = e.changedTouches[0].clientX - touchX;
+  const dy = e.changedTouches[0].clientY - touchY;
+  touchX = touchY = null;
+  if (Math.abs(dx) < 45 || Math.abs(dx) < Math.abs(dy)) return;
+  if (dx < 0) goTo(current + 1);
+  else        goTo(current - 1);
+}, { passive: true });
+
+/* ---------------- Music ---------------- */
+const LS_SONG = "shifa_song_v1";     // { name, dataUrl }
+const LS_POS  = "shifa_song_pos_v1";
+
+function setSongTitle(name) {
+  songTitle.textContent = name ? `♫ ${name}` : "♫ Your little soundtrack";
+}
+
+function loadSong(name, src, restorePos) {
+  songAudio.src = src;
+  setSongTitle(name);
+  songAudio.addEventListener("loadedmetadata", () => {
+    if (restorePos && restorePos < songAudio.duration - 2) {
+      try { songAudio.currentTime = restorePos; } catch (_) {}
+    }
+  }, { once: true });
+}
+
+function initDefaultSong() {
+  const saved = localStorage.getItem(LS_SONG);
+  if (saved) {
+    try {
+      const { name, dataUrl } = JSON.parse(saved);
+      const pos = +localStorage.getItem(LS_POS) || 0;
+      loadSong(name, dataUrl, pos);
+      return;
+    } catch (_) {}
+  }
+  // Fallback: song.mp3 from root
+  loadSong("song.mp3", DEFAULT_SONG, 0);
+}
+
+musicBtn.addEventListener("click", () => {
+  musicCard.classList.add("show");
+  songAudio.play().catch(() => {});
+});
+musicClose.addEventListener("click", () => {
+  musicCard.classList.remove("show");
+  songAudio.pause();
+});
+changeSong.addEventListener("click", () => songFile.click());
+
+songFile.addEventListener("change", () => {
+  const f = songFile.files && songFile.files[0];
+  if (!f) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      localStorage.setItem(LS_SONG, JSON.stringify({ name: f.name, dataUrl: reader.result }));
+      localStorage.setItem(LS_POS, "0");
+    } catch (_) {
+      statusEl.textContent = "Song is a bit large to save — it will play this session only ♡";
+      statusEl.dataset.locked = "1";
+    }
+    loadSong(f.name, reader.result, 0);
+    songAudio.play().catch(() => {});
+  };
+  reader.readAsDataURL(f);
+});
+
+clearSong.addEventListener("click", () => {
+  localStorage.removeItem(LS_SONG);
+  localStorage.removeItem(LS_POS);
+  songAudio.pause();
+  // fall back to bundled song.mp3
+  loadSong("song.mp3", DEFAULT_SONG, 0);
+});
+
+// Save position periodically
+setInterval(() => {
+  if (!songAudio.paused && songAudio.currentTime > 0) {
+    try { localStorage.setItem(LS_POS, String(Math.floor(songAudio.currentTime))); } catch (_) {}
+  }
+}, 3000);
+
+/* ---------------- Photos (upload all) ---------------- */
+const LS_PHOTOS = "shifa_photos_v1";
+
+function applyCustomPhotos(map) {
+  // map: { "0": dataUrl, "1": dataUrl, ... }
+  document.querySelectorAll(".polaroid").forEach((pol) => {
+    const idx = pol.dataset.photo;
+    if (idx == null) return;
+    const dataUrl = map && map[idx];
+    if (!dataUrl) return;
+    const img = pol.querySelector("img");
+    const ph  = pol.querySelector(".ph");
+    if (img) { img.src = dataUrl; img.style.display = "block"; }
+    if (ph)  { ph.style.display = "none"; }
+  });
+}
+
+allPhotos.addEventListener("change", () => {
+  const files = [...(allPhotos.files || [])];
+  if (!files.length) return;
+  const map = {};
+  let pending = files.length;
+  files.forEach((f, i) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      map[String(i % 12)] = reader.result;
+      if (--pending === 0) {
+        try { localStorage.setItem(LS_PHOTOS, JSON.stringify(map)); } catch (_) {}
+        applyCustomPhotos(map);
+        statusEl.textContent = "Your photos are tucked into the pages ♡";
+        statusEl.dataset.locked = "1";
+        setTimeout(() => { delete statusEl.dataset.locked; }, 4000);
+      }
+    };
+    reader.readAsDataURL(f);
+  });
+});
+
+/* ---------------- Confetti / magic canvas ---------------- */
+const canvas = document.getElementById("fx");
+const ctx = canvas.getContext("2d");
+let W = 0, H = 0, DPR = Math.min(window.devicePixelRatio || 1, 2);
+function resize() {
+  W = canvas.width  = innerWidth  * DPR;
+  H = canvas.height = innerHeight * DPR;
+  canvas.style.width  = innerWidth + "px";
+  canvas.style.height = innerHeight + "px";
+}
+resize();
+addEventListener("resize", resize);
+
+const CONFETTI_COLORS = ["#c2587f", "#e08aab", "#f6cfe1", "#c9a15b", "#a24468", "#fbe3ec"];
+let bits = [];
+
+function burst(n = 90) {
+  for (let i = 0; i < n; i++) {
+    bits.push({
+      x: Math.random() * W,
+      y: -20 * DPR,
+      vx: (Math.random() - 0.5) * 3 * DPR,
+      vy: (Math.random() * 3 + 1.5) * DPR,
+      s: (Math.random() * 7 + 4) * DPR,
+      r: Math.random() * Math.PI,
+      vr: (Math.random() - 0.5) * 0.2,
+      c: CONFETTI_COLORS[(Math.random() * CONFETTI_COLORS.length) | 0],
+      heart: Math.random() < 0.25
+    });
+  }
+}
+
+function drawHeart(x, y, s) {
+  ctx.beginPath();
+  ctx.moveTo(x, y + s * 0.3);
+  ctx.bezierCurveTo(x, y, x - s * 0.5, y, x - s * 0.5, y + s * 0.4);
+  ctx.bezierCurveTo(x - s * 0.5, y + s * 0.8, x, y + s * 1.1, x, y + s * 1.4);
+  ctx.bezierCurveTo(x, y + s * 1.1, x + s * 0.5, y + s * 0.8, x + s * 0.5, y + s * 0.4);
+  ctx.bezierCurveTo(x + s * 0.5, y, x, y, x, y + s * 0.3);
+  ctx.fill();
+}
+
+function loop() {
+  ctx.clearRect(0, 0, W, H);
+  bits.forEach((b) => {
+    b.x += b.vx; b.y += b.vy; b.r += b.vr;
+    b.vy += 0.03 * DPR;
+    ctx.save();
+    ctx.translate(b.x, b.y);
+    ctx.rotate(b.r);
+    ctx.fillStyle = b.c;
+    if (b.heart) drawHeart(0, 0, b.s);
+    else ctx.fillRect(-b.s / 2, -b.s / 2, b.s, b.s * 0.6);
+    ctx.restore();
+  });
+  bits = bits.filter((b) => b.y < H + 40 * DPR);
+  requestAnimationFrame(loop);
+}
+loop();
+
+confettiBtn.addEventListener("click", () => burst(110));
+
+/* ---------------- Ambient floating hearts ---------------- */
+setInterval(() => {
+  if (document.hidden) return;
+  if (bits.length > 220) return;
+  bits.push({
+    x: Math.random() * W,
+    y: H + 10,
+    vx: (Math.random() - 0.5) * 0.6 * DPR,
+    vy: -(Math.random() * 0.7 + 0.4) * DPR,
+    s: (Math.random() * 5 + 3) * DPR,
+    r: (Math.random() - 0.5),
+    vr: (Math.random() - 0.5) * 0.05,
+    c: CONFETTI_COLORS[(Math.random() * CONFETTI_COLORS.length) | 0],
+    heart: true
+  });
+}, 900);
+
+/* ---------------- Boot ---------------- */
+buildPages();
+initDefaultSong();
+goTo(0, true);
+
+// load saved custom photos
+try {
+  const savedPhotos = localStorage.getItem(LS_PHOTOS);
+  if (savedPhotos) applyCustomPhotos(JSON.parse(savedPhotos));
+} catch (_) {}
