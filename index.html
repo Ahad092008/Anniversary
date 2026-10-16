@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#f9e3ec" />
+  <title>A Little Universe for Shifa ♡</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;700&family=Nunito:wght@400;600;700&family=Playfair+Display:ital,wght@0,500;1,500;1,700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <canvas id="fx" aria-hidden="true"></canvas>
+
+  <main class="shell">
+    <header>
+      <p class="eyebrow">a tiny book of big feelings</p>
+      <h1 class="heading">For my Shifa ♡</h1>
+      <p class="sub">17 October · two cities, one soft little universe 🎀</p>
+    </header>
+
+    <div class="toolbar">
+      <button class="btn primary" id="music" type="button">♫ Choose our song</button>
+      <label class="btn" for="allPhotos">♡ Add our photos</label>
+      <input id="allPhotos" type="file" accept="image/*" multiple hidden />
+      <button class="btn" id="confetti" type="button">✧ Sprinkle magic</button>
+    </div>
+    <p class="status" id="status" aria-live="polite">Choose an audio file once — it stays saved here until you change it ♡</p>
+
+    <section class="music-card" id="musicCard" aria-label="Anniversary song">
+      <div class="music-head">
+        <strong id="songTitle">♫ Your little soundtrack</strong>
+        <button type="button" class="icon-btn" id="musicClose" aria-label="Hide player">×</button>
+      </div>
+      <audio id="songAudio" controls preload="metadata" loop></audio>
+      <div class="song-actions">
+        <button class="btn small" type="button" id="changeSong">♡ Change song</button>
+        <button class="btn small" type="button" id="clearSong">Remove</button>
+      </div>
+      <input id="songFile" type="file" accept="audio/*,.mp3,.m4a,.wav,.ogg,.aac" hidden />
+    </section>
+
+    <div class="book-area" id="bookArea" aria-label="Anniversary diary, a cover and 17 pages">
+      <div class="book" id="book"><div class="back-cover"></div></div>
+    </div>
+
+    <div class="progress" aria-hidden="true"><span id="bar"></span></div>
+    <div class="controls">
+      <button class="btn" id="prev" type="button" disabled>← Previous</button>
+      <span class="counter" id="counter">Cover</span>
+      <button class="btn primary" id="next" type="button">Next page →</button>
+    </div>
+    <p class="hint">Tap the page, swipe, or use the ← → keys ♡</p>
+    <p class="footer">a little keepsake for Shifa · made with love, from Ahad ♡</p>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
