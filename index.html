@@ -21,25 +21,10 @@
     </header>
 
     <div class="toolbar">
-      <button class="btn primary" id="music" type="button">♫ Choose our song</button>
-      <label class="btn" for="allPhotos">♡ Add our photos</label>
-      <input id="allPhotos" type="file" accept="image/*" multiple hidden />
+      <button class="btn primary" id="music" type="button">♫ Play our song</button>
       <button class="btn" id="confetti" type="button">✧ Sprinkle magic</button>
     </div>
-    <p class="status" id="status" aria-live="polite">Choose an audio file once — it stays saved here until you change it ♡</p>
-
-    <section class="music-card" id="musicCard" aria-label="Anniversary song">
-      <div class="music-head">
-        <strong id="songTitle">♫ Your little soundtrack</strong>
-        <button type="button" class="icon-btn" id="musicClose" aria-label="Hide player">×</button>
-      </div>
-      <audio id="songAudio" controls preload="metadata" loop></audio>
-      <div class="song-actions">
-        <button class="btn small" type="button" id="changeSong">♡ Change song</button>
-        <button class="btn small" type="button" id="clearSong">Remove</button>
-      </div>
-      <input id="songFile" type="file" accept="audio/*,.mp3,.m4a,.wav,.ogg,.aac" hidden />
-    </section>
+    <p class="status" id="status" aria-live="polite">Tap play, or just turn the page — our song will start ♡</p>
 
     <div class="book-area" id="bookArea" aria-label="Anniversary diary, a cover and 17 pages">
       <div class="book" id="book"><div class="back-cover"></div></div>
